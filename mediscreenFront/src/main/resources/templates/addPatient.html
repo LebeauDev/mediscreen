@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Add patient</title>
+
+</head>
+
+<body>
+
+	<div class="container">
+		<br /><br />
+
+		<form th:action="@{/add}"  th:object="${patientForm}" method="POST" class="form-signin" style="width:30%;margin:auto; text-align:center
+		">
+
+
+
+			<br />
+			<br />
+
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Family</p>
+			</div>
+
+			<input type="text" id="family"   th:field="*{family}"  placeholder="Family" class="form-control" /> <br />
+			<br />
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Given</p>
+			</div>
+			<input type="text" placeholder="Given" th:field="*{given}" id="given"  class="form-control" /> <br />
+
+			<br />
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Dob</p>
+			</div>
+			<input type="text" placeholder="Dob" th:field="*{dob}" id="dob"  class="form-control" /> <br />
+			<br />
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Sex</p>
+			</div>
+			<input type="text" placeholder="Sex" th:field="*{sex}" id="sex"  class="form-control" /> <br />
+			<br />
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Address</p>
+			</div>
+			<input type="text" placeholder="Address" th:field="*{address}" id="address"  class="form-control" /> <br />
+			<br />
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Phone</p>
+			</div>
+			<input type="text" placeholder="Phone" th:field="*{phone}" id="phone"  class="form-control" /> <br />
+			<br />
+
+
+			<button class="btn-lg btn-primary btn-block" name="add" value="add" type="Submit"
+				th:text="Add"></button>
+			<br />
+		</form>
+
+
+	</div>
+</body>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+
+<script>
+	
+	$(document).ready(function () {
+		$('#datatable1').DataTable({
+			"pageLength": 4, 
+		}
+			
+		);
+		
+	});
+</script>
+
+</html>
