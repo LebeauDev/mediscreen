@@ -3,6 +3,7 @@ package com.openclassrooms.mediscreenFront.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,32 +21,41 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassromms.mediscreenFront.form.NoteForm;
 import com.openclassromms.mediscreenFront.form.PatientForm;
+import com.openclassrooms.mediscreenFront.model.Note;
 import com.openclassrooms.mediscreenFront.model.Patient;
 
 @Controller
-public class PatientController {
-
-	@GetMapping({ "/listPatient" })
-	public ModelAndView showUsers() {
+public class NoteController {
+	
+	@GetMapping({ "/listNote" })
+	public ModelAndView showUsers(@RequestParam MultiValueMap<String, String> param) {
+		
+		String id = param.getFirst("idPatient");
+		
+		//System.out.println("+++++"+id);
 
 		WebClient client = WebClient.create();
 
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8080/allPatients").retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8082/notes?idPatient="+id).retrieve();
 
 		String responseBody = responseSpec.bodyToMono(String.class).block();
+		
+		
+		
 
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
 
-			List<Patient> listPatient = mapper.readValue(responseBody, new TypeReference<List<Patient>>() {
+			List<Note> listNote = mapper.readValue(responseBody, new TypeReference<List<Note>>() {
 			});
 
 			try {
-				ModelAndView mav = new ModelAndView("list-transaction-test");
+				ModelAndView mav = new ModelAndView("listNote");
 
-				mav.addObject("listPatient", listPatient);
+				mav.addObject("listNote", listNote);
 
 				return mav;
 			} catch (Exception e) {
@@ -66,43 +76,40 @@ public class PatientController {
 	}
 
 	// remplace postman pour requette vers API POST /add plus
-	@GetMapping({ "/add" })
-	public ModelAndView addUser() {
-		ModelAndView mav = new ModelAndView("addPatient");
+	@GetMapping({ "/addNote" })
+	public ModelAndView addNote() {
+		ModelAndView mav = new ModelAndView("addNote");
 
-		PatientForm patientForm = new PatientForm();
+		NoteForm noteForm = new NoteForm();
 
-		mav.addObject("patientForm", patientForm);
+		mav.addObject("noteForm", noteForm);
 
 		return mav;
 	}
 	
 	
 	// API mais aul lieu de repository, requette vers une autre API
-	@RequestMapping(value = { "/add" }, method = RequestMethod.POST)
-	public String addPatient(Model model, @ModelAttribute("patientForm") PatientForm patientForm) {
+	@RequestMapping(value = { "/addNote" }, method = RequestMethod.POST)
+	public String addPatient(Model model, @ModelAttribute("noteForm") NoteForm noteForm) {
 
-		String family = patientForm.getFamily();
-		String given = patientForm.getGiven();
-		String dob = patientForm.getDob();
-		String sex = patientForm.getSex();
-		String address = patientForm.getAddress();
-		String phone = patientForm.getPhone();
+		String note = noteForm.getNote();
+		int idPatient = noteForm.getIdPatient();
+		String date = noteForm.getDate();
 
 		MultiValueMap<String, String> bodyValues = new LinkedMultiValueMap<>();
 
-		bodyValues.add("family", family);
-		bodyValues.add("given", given);
-		bodyValues.add("dob", dob);
-		bodyValues.add("sex", sex);
-		bodyValues.add("address", address);
-		bodyValues.add("phone", phone);
+		bodyValues.add("note", note);
+		bodyValues.add("idPatient", ""+idPatient);
+		bodyValues.add("date", date);
+		//bodyValues.add("sex", sex);
+		//bodyValues.add("address", address);
+		//bodyValues.add("phone", phone);
 
 		WebClient client = WebClient.create();
 
 		try {
 
-			String response = client.post().uri(new URI("http://localhost:8080/addPatient"))
+			String response = client.post().uri(new URI("http://localhost:8082/addNote"))
 					.body(BodyInserters.fromFormData(bodyValues)).retrieve().bodyToMono(String.class).block();
 			System.out.println(response);
 			return "redirect:/listPatient";
@@ -111,8 +118,10 @@ public class PatientController {
 			e.printStackTrace();
 		}
 
-		return "addPatient";
+		return "addNote";
 	}
+	
+	/*
 
 	@GetMapping({"/delete"})
 	public ModelAndView deleteUser() {
@@ -158,35 +167,32 @@ public class PatientController {
 		return "deletePatient";
 	}
 	
-	
-	@GetMapping({ "/updatePatient" })
+	*/
+	@GetMapping({ "/updateNote" })
 	public ModelAndView updatePatient(@RequestParam MultiValueMap<String, String> param) {
-		ModelAndView mav = new ModelAndView("updatePatient");
+		ModelAndView mav = new ModelAndView("updateNote");
 		
-		String family = param.getFirst("family");
-		String given = param.getFirst("given");
+		String id = param.getFirst("id");
 		
 		WebClient client = WebClient.create();
 
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8080/patient/?family="+family+"&given="+given).retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8082/note/?id="+id).retrieve();
 		
-		System.out.println("http://localhost:8080/patient/?family = "+family+"&given="+given);
+		//System.out.println("http://localhost:8080/patient/?family = "+family+"&given="+given);
 		
 		String responseBody = responseSpec.bodyToMono(String.class).block();
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		PatientForm patientForm = new PatientForm();
+		NoteForm noteForm = new NoteForm();
 
 		try {
-			Patient p = mapper.readValue(responseBody, new TypeReference<Patient>() {});
+			Note n = mapper.readValue(responseBody, new TypeReference<Note>() {});
 			
-			patientForm.setFamily(p.getFamily());
-			patientForm.setGiven(p.getGiven());
-			patientForm.setDob(p.getDob());
-			patientForm.setSex(p.getSex());
-			patientForm.setAddress(p.getAddress());
-			patientForm.setPhone(p.getPhone());
+			noteForm.setDate(n.getDate());
+			noteForm.setId(n.getId());
+			noteForm.setIdPatient(n.getIdPatient());
+			noteForm.setNote(n.getNote());
 			
 			
 			
@@ -197,29 +203,30 @@ public class PatientController {
 
 		
 
-		mav.addObject("patientForm", patientForm);
+		mav.addObject("noteForm", noteForm);
 
 		return mav;
 	}
+	
+	
 
-	@RequestMapping(value = { "/updatePatient" }, method = RequestMethod.POST)
-	public String updatePatient(Model model, @ModelAttribute("patientForm") PatientForm patientForm) {
+	@RequestMapping(value = { "/updateNote" }, method = RequestMethod.POST)
+	public String updatePatient(Model model, @ModelAttribute("noteForm") NoteForm noteForm) {
 
-		String family = patientForm.getFamily();
-		String given = patientForm.getGiven();
-		String dob = patientForm.getDob();
-		String sex = patientForm.getSex();
-		String address = patientForm.getAddress();
-		String phone = patientForm.getPhone();
+		String note = noteForm.getNote();
+		String id =  noteForm.getId();
+		String date  =  noteForm.getDate();
+		int idPatient =  noteForm.getIdPatient();
+		
+		System.out.println("++++++++ "+idPatient);
+		
 
 		MultiValueMap<String, String> bodyValues = new LinkedMultiValueMap<>();
 
-		bodyValues.add("family", family);
-		bodyValues.add("given", given);
-		bodyValues.add("dob", dob);
-		bodyValues.add("sex", sex);
-		bodyValues.add("address", address);
-		bodyValues.add("phone", phone);
+		bodyValues.add("note", note);
+		bodyValues.add("id", id);
+		bodyValues.add("date", date);
+		bodyValues.add("idPatient", idPatient+"");
 
 		WebClient client = WebClient.create();
 
@@ -227,10 +234,10 @@ public class PatientController {
 			
 			
 
-			String response = client.post().uri(new URI("http://localhost:8080/updatePatient"))
+			String response = client.post().uri(new URI("http://localhost:8082/updateNote"))
 					.body(BodyInserters.fromFormData(bodyValues)).retrieve().bodyToMono(String.class).block();
 			//System.out.println("u "+response);
-			return "redirect:/listPatient";
+			return "redirect:/listNote?idPatient="+idPatient;
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -238,5 +245,7 @@ public class PatientController {
 
 		return "updatePatient";
 	}
-
+	
+	
+	
 }

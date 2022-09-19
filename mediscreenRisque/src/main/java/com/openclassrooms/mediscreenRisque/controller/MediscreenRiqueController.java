@@ -36,13 +36,13 @@ public class MediscreenRiqueController {
 	@Autowired
 	NoteService noteServ;
 	
-	@RequestMapping(value = { "/assess" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/assess/id" }, method = RequestMethod.POST)
 	public ResponseEntity<?> showUsers(@RequestParam Map<String, String> allRequestParams) {
 
 		WebClient client = WebClient.create();
 	
 		
-		String id = allRequestParams.get("id");
+		String id = allRequestParams.get("patId");
 
 
 		

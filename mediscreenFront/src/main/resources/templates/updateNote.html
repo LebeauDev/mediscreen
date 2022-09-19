@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Update Notet</title>
+
+</head>
+
+<body>
+
+	<div class="container">
+		<br /><br />
+
+		<form th:action="@{/updateNote}"  th:object="${noteForm}" method="POST" class="form-signin" style="width:30%;margin:auto; text-align:center
+		">
+
+
+
+			<br />
+			<br />
+
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Id patient</p>
+			</div>
+			
+			<input type="hidden" id="id"   th:field="*{id}"  placeholder="id" class="form-control" />
+			
+			<input type="hidden" id="date"   th:field="*{date}"  placeholder="date" class="form-control" />
+
+			<input type="text" id="idPatient"   th:field="*{idPatient}"  placeholder="IdPatient" class="form-control" /> <br />
+			<br />
+			<div align="center" th:if="${param.error}">
+				<p style="font-size: 20; color: #FF1C19;">Note</p>
+			</div>
+			<textarea type="text" placeholder="Note" th:field="*{note}" id="note"  class="form-control" /> <br />
+
+			
+
+
+			<button class="btn-lg btn-primary btn-block" name="add" value="add" type="Submit"
+				th:text="Update"></button>
+			<br />
+		</form>
+
+
+	</div>
+</body>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+
+<script>
+	
+	$(document).ready(function () {
+		$('#datatable1').DataTable({
+			"pageLength": 4, 
+		}
+			
+		);
+		
+	});
+</script>
+
+</html>

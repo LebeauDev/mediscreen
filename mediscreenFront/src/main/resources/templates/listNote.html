@@ -1,0 +1,53 @@
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+
+	<title>Liste Patients</title>
+	
+
+</head>
+
+<body>
+	<header>
+		
+		
+	
+
+	</header>
+	
+	
+
+
+
+		<h2>Patients</h2>
+
+		<table  class="table table-striped table-bordered" style="width:100%" id="datatable1">
+			
+			
+			
+			
+			
+			<thead id="thead1">
+				<tr>
+					<th>ID Patient</th>
+					<th>Note</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="note: ${listNote}">
+					<td th:text="${note.idPatient}"></td>
+					<td th:text="${note.note}"></td>
+					
+				</tr>
+			</tbody>
+			
+
+		</table >
+		
+		
+	
+</body>
+
+
+</html>
