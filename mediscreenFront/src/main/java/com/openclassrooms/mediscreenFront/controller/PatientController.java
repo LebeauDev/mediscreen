@@ -31,7 +31,7 @@ public class PatientController {
 
 		WebClient client = WebClient.create();
 
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8080/allPatients").retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://api:8080/allPatients").retrieve();
 
 		String responseBody = responseSpec.bodyToMono(String.class).block();
 
@@ -102,7 +102,7 @@ public class PatientController {
 
 		try {
 
-			String response = client.post().uri(new URI("http://localhost:8080/addPatient"))
+			String response = client.post().uri(new URI("http://api:8080/addPatient"))
 					.body(BodyInserters.fromFormData(bodyValues)).retrieve().bodyToMono(String.class).block();
 			System.out.println(response);
 			return "redirect:/listPatient";
@@ -143,7 +143,7 @@ public class PatientController {
 		try {
 
 			String response = client.post()
-					.uri(new URI("http://localhost:8080/delete"))
+					.uri(new URI("http://api:8080/delete"))
 					.body(BodyInserters.fromFormData(bodyValues))
 					.retrieve()
 					.bodyToMono(String.class)
@@ -168,9 +168,9 @@ public class PatientController {
 		
 		WebClient client = WebClient.create();
 
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8080/patient/?family="+family+"&given="+given).retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://api:8080/patient?family="+family+"&given="+given).retrieve();
 		
-		System.out.println("http://localhost:8080/patient/?family = "+family+"&given="+given);
+		//System.out.println("http://localhost:8080/patient/?family="+family+"&given="+given);
 		
 		String responseBody = responseSpec.bodyToMono(String.class).block();
 
@@ -227,7 +227,7 @@ public class PatientController {
 			
 			
 
-			String response = client.post().uri(new URI("http://localhost:8080/updatePatient"))
+			String response = client.post().uri(new URI("http://api:8080/updatePatient"))
 					.body(BodyInserters.fromFormData(bodyValues)).retrieve().bodyToMono(String.class).block();
 			//System.out.println("u "+response);
 			return "redirect:/listPatient";

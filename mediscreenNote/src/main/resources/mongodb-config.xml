@@ -12,7 +12,7 @@
 
         <mongo:repositories base-package="com.concretepage.repository"/>
 
-	<mongo:mongo-client host="localhost" port="27017" id="mediscreenDB" />
+	<mongo:mongo-client host="mongodb" port="27017" id="mediscreenDB" />
 
 	<mongo:db-factory dbname="mediscreenDB" id="mediscreenDB"/>
 

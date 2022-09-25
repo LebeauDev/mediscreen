@@ -1,7 +1,5 @@
 package com.openclassrooms.mediscreenRisque.service;
 
-import java.util.Date;
-
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mediscreenRisque.entity.Patient;

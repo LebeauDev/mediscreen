@@ -38,7 +38,7 @@ public class NoteController {
 
 		WebClient client = WebClient.create();
 
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8082/notes?idPatient="+id).retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://note:8082/notes?idPatient="+id).retrieve();
 
 		String responseBody = responseSpec.bodyToMono(String.class).block();
 		
@@ -90,17 +90,35 @@ public class NoteController {
 	
 	// API mais aul lieu de repository, requette vers une autre API
 	@RequestMapping(value = { "/addNote" }, method = RequestMethod.POST)
-	public String addPatient(Model model, @ModelAttribute("noteForm") NoteForm noteForm) {
+	public String addPatient(Model model, @ModelAttribute("noteForm") NoteForm noteForm) throws JsonMappingException, JsonProcessingException {
 
 		String note = noteForm.getNote();
-		int idPatient = noteForm.getIdPatient();
-		String date = noteForm.getDate();
+		
+		
+		String family = noteForm.getFamily();
+		String given = noteForm.getGiven();
 
 		MultiValueMap<String, String> bodyValues = new LinkedMultiValueMap<>();
+		
+		WebClient client0 = WebClient.create();
+		
+		WebClient.ResponseSpec responseSpec = client0.get().uri("http://api:8080/patient?family="+family+"&given="+given).retrieve();
+		
+		//System.out.println("http://localhost:8080/patient/?family="+family+"&given="+given);
+		
+		String responseBody = responseSpec.bodyToMono(String.class).block();
 
-		bodyValues.add("note", note);
-		bodyValues.add("idPatient", ""+idPatient);
-		bodyValues.add("date", date);
+		ObjectMapper mapper = new ObjectMapper();
+
+		PatientForm patientForm = new PatientForm();
+
+		
+		Patient p = mapper.readValue(responseBody, new TypeReference<Patient>() {});		
+		
+		int idPatient = p.getId();
+
+		bodyValues.add("e", note);
+		bodyValues.add("patId", ""+idPatient);
 		//bodyValues.add("sex", sex);
 		//bodyValues.add("address", address);
 		//bodyValues.add("phone", phone);
@@ -109,10 +127,10 @@ public class NoteController {
 
 		try {
 
-			String response = client.post().uri(new URI("http://localhost:8082/addNote"))
+			String response = client.post().uri(new URI("http://note:8082/patHistory/add"))
 					.body(BodyInserters.fromFormData(bodyValues)).retrieve().bodyToMono(String.class).block();
-			System.out.println(response);
-			return "redirect:/listPatient";
+			//System.out.println(response);
+			return "redirect:/listNote?idPatient="+idPatient;
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -176,7 +194,7 @@ public class NoteController {
 		
 		WebClient client = WebClient.create();
 
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8082/note/?id="+id).retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://note:8082/note/?id="+id).retrieve();
 		
 		//System.out.println("http://localhost:8080/patient/?family = "+family+"&given="+given);
 		
@@ -234,7 +252,7 @@ public class NoteController {
 			
 			
 
-			String response = client.post().uri(new URI("http://localhost:8082/updateNote"))
+			String response = client.post().uri(new URI("http://note:8082/updateNote"))
 					.body(BodyInserters.fromFormData(bodyValues)).retrieve().bodyToMono(String.class).block();
 			//System.out.println("u "+response);
 			return "redirect:/listNote?idPatient="+idPatient;

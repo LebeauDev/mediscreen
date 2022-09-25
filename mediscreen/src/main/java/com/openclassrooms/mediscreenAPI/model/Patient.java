@@ -1,26 +1,25 @@
-package com.openclassrooms.mediscreenFront.model;
+package com.openclassrooms.mediscreenAPI.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@JsonIgnoreProperties(ignoreUnknown = true) 
-@JsonDeserialize
+
+
+@Entity
+@Table(name = "Patient")
 public class Patient {
-	
-	//@JsonProperty("id")
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@JsonProperty("family")
 	private String family;
-	@JsonProperty("given")
 	private String given;
-	@JsonProperty("dob")
-    private String dob;
-	@JsonProperty("sex")
+	private String dob;
 	private String sex;
-	@JsonProperty("address")
 	private String address;
-	@JsonProperty("phone")
 	private String phone;
 	
 	
@@ -61,25 +60,18 @@ public class Patient {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
-	/*
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}*/
-	
-	@Override
-	public String toString() {
-		return "Patient [id=" + ", family=" + family + ", given=" + given + ", dob=" + dob + ", sex=" + sex
-				+ ", address=" + address + ", phone=" + phone + "]";
-	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", family=" + family + ", given=" + given + ", dob=" + dob + ", sex=" + sex
+				+ ", address=" + address + ", phone=" + phone + "]";
+	}
+	
+	
 }

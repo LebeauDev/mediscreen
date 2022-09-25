@@ -46,7 +46,7 @@ public class MediscreenRiqueController {
 
 
 		
-		WebClient.ResponseSpec responseSpec = client.get().uri("http://localhost:8080/patient/?id="+ id).retrieve();
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://api:8080/patient/?id="+ id).retrieve();
 
 		String responseBody = responseSpec.bodyToMono(String.class).block();
 
@@ -60,7 +60,59 @@ public class MediscreenRiqueController {
 			
 			
 			
-			WebClient.ResponseSpec responseSpec1 = client.get().uri("http://localhost:8082/notes/?idPatient="+ id).retrieve();
+			WebClient.ResponseSpec responseSpec1 = client.get().uri("http://note:8082/notes/?idPatient="+ id).retrieve();
+
+			String responseBody1 = responseSpec1.bodyToMono(String.class).block();
+
+			ObjectMapper mapper1 = new ObjectMapper();
+			
+			
+			List<Note> listNotes = mapper1.readValue(responseBody1, new TypeReference<List<Note>>() {
+			});
+			
+			int age = patientServ.age(patient);
+			
+			
+			String risque  = noteServ.risque(listNotes, age, patient);
+			
+			return ResponseEntity.ok(risque);
+
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+
+		return null;
+
+	}
+	
+	
+	@RequestMapping(value = { "/assess/familyName" }, method = RequestMethod.POST)
+	public ResponseEntity<?> showRisque(@RequestParam Map<String, String> allRequestParams) {
+
+		WebClient client = WebClient.create();
+	
+		
+		String family = allRequestParams.get("familyName");
+
+
+		
+		WebClient.ResponseSpec responseSpec = client.get().uri("http://api:8080/patientName/?family="+ family).retrieve();
+
+		String responseBody = responseSpec.bodyToMono(String.class).block();
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		
+
+		try {
+
+			Patient patient = mapper.readValue(responseBody, new TypeReference<Patient>() {});
+			
+			
+			
+			WebClient.ResponseSpec responseSpec1 = client.get().uri("http://note:8082/notes/?idPatient="+ patient.getId()).retrieve();
 
 			String responseBody1 = responseSpec1.bodyToMono(String.class).block();
 

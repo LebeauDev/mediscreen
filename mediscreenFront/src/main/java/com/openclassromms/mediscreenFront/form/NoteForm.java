@@ -9,6 +9,8 @@ public class NoteForm {
 	private String note;
 	private int idPatient;
 	private String date;
+	private String family;
+	private String given;
 	
 	
 	public String getId() {
@@ -41,6 +43,22 @@ public class NoteForm {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getFamily() {
+		return family;
+	}
+
+	public void setFamily(String family) {
+		this.family = family;
+	}
+
+	public String getGiven() {
+		return given;
+	}
+
+	public void setGiven(String given) {
+		this.given = given;
 	}
 
 }

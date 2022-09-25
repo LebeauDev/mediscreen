@@ -46,46 +46,46 @@ public class NoteService {
 		
 		
 		
-		switch (count) {
-		case 0: {
+
+		if(count == 0) {
 			System.out.println("&&&&&&&& 0, "+count);
 			assess = "None";
-			break;
+
 		}
-		case 2: {
+		if(count == 1) {
+			System.out.println("&&&&&&&& 0, "+count);
+			assess = "None";
+
+		}
+		if(count >= 2) {
 			System.out.println("&&&&&&&& 2, "+count);
 			if(age > 30) assess = "Borderline";
-			break;
+
 		}
-		case 3: {
+		if(count >= 3) {
 			System.out.println("&&&&&&&& 3, "+count);
 			if(age < 30 && p.getSex() == "M") assess = "In Danger";
-			break;
+
 		}
-		case 4: {
+		if(count >= 4) {
 			System.out.println("&&&&&&&& 4, "+count);
 			if(age < 30 && p.getSex() == "F") assess = "In Danger";
-			break;
+
 		}
-		case 5: {
+		if(count >= 5) {
 			System.out.println("&&&&&&&& 5, "+count);
 			if(age < 30 && p.getSex() == "M") assess = "Early onset";
 			
-			break;
+
 		}
-		case 6: {
+		if(count >= 6) {
 			System.out.println("&&&&&&&& 6, "+count);
 			if(age > 30) assess = "In Danger";
-			break;
 		}
-		case 7: {
+		if(count >= 7) {
 			System.out.println("&&&&&&&& 7, "+count);
 			if(age < 30 && p.getSex() == "F") assess =  "Early onset";
-			break;
-		}
-		default:
-			
-		}
+		}	
 		
 		if(count >= 8 && age > 30)   assess =  "Early onset";
 		
